@@ -1,0 +1,16 @@
+name: course-template
+channels:
+  - defaults
+dependencies:
+  - jupyter
+  - matplotlib
+  - numpy
+  - pandas
+  - python=3.12
+  - qrcode
+  - scikit-learn
+  - scipy
+  - seaborn
+  - yaml
+  - nltk
+  - sympy

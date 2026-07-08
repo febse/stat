@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "GrapeCity.gc-excelviewer",
+        "ms-python.autopep8",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.datawrangler",
+        "mechatroner.rainbow-csv"
+    ]
+}

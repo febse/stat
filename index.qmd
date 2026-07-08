@@ -1,0 +1,38 @@
+# Setup {.unnumbered}
+
+::: callout-note
+## Website URL
+
+[{{< var url >}}]({{< var url >}}){style="font-size:2em; margin-left: 1em;"}
+
+![](./figures/qr_code.png)
+:::
+
+## Notebooks
+
+Course notebooks will be linked here as they are added. Each notebook can be
+opened directly in Google Colab, e.g.:
+
+- [Notebook Title](https://colab.research.google.com/github/<org>/<repo>/blob/main/01-Notebook.ipynb)
+
+## Schedule
+
+TBA
+
+## Grading
+
+TBA
+
+## GitHub Repository
+
+All course materials will be available in the GitHub repository:
+
+[{{< var github >}}]({{< var github >}})
+
+## GitHub Account
+
+Open a GitHub account at <https://github.com/signup>. While you don't need an account to download the course materials, you will need one to receive and submit assignments (this will be explained in detail during the exercise classes). You can also apply for the GitHub student benefits at <https://education.github.com/benefits>. If approved you can receive free access to the GitHub Pro plan and to GitHub Copilot, an AI tool that helps you write code.
+
+## Google Account
+
+We will be using Python through Jupyter notebooks in the exercise classes. The recommended way to work with them is Google Colab, a cloud service that allows you to run Python code in the browser (and offers a reasonable free tier). You will need a Google account to use Google Colab. If you don't have one, please register here: <https://accounts.google.com/signup>.

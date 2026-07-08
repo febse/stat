@@ -1,0 +1,27 @@
+project:
+  type: book
+  output-dir: _site
+
+book:
+  title: "Course Title"
+  author: "Author Name"
+  date: last-modified
+
+  chapters:
+    - index.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    html-math-method: katex
+
+editor: visual
+
+profile:
+  default: development
+
+execute:
+  enabled: true
