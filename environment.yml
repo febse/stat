@@ -1,4 +1,4 @@
-name: course-template
+name: stat
 channels:
   - defaults
 dependencies:

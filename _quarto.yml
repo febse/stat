@@ -3,8 +3,8 @@ project:
   output-dir: _site
 
 book:
-  title: "Course Title"
-  author: "Author Name"
+  title: "Introduction to Statistic"
+  author: "Boyko Amarov"
   date: last-modified
 
   chapters:

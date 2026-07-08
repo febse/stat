@@ -13,7 +13,7 @@
 Course notebooks will be linked here as they are added. Each notebook can be
 opened directly in Google Colab, e.g.:
 
-- [Notebook Title](https://colab.research.google.com/github/<org>/<repo>/blob/main/01-Notebook.ipynb)
+- [Notebook Title](https://colab.research.google.com/github/febse/stat/blob/main/01-Notebook.ipynb)
 
 ## Schedule
 

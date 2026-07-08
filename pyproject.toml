@@ -1,7 +1,7 @@
 [project]
-name = "course-template"
+name = "stat"
 version = "0.1.0"
-description = "Template for Quarto + Jupyter based courses"
+description = "Introductory Statistics course materials"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
