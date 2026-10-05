@@ -1,4 +1,5 @@
-"""Create stripped class versions of the notebooks listed in _quarto.yml.
+"""Create stripped class versions of all notebooks in the root folder and of
+the notebooks listed in _quarto.yml.
 
 Only code cells whose first line starts with ``#ex-class``, the headings
 (titles) and the ``:::{.ex-class}`` fenced divs of markdown cells are kept. The results are
@@ -121,10 +122,16 @@ def notebooks_from_quarto():
     return [ROOT / p for p in walk(chapters) if p.endswith(".ipynb")]
 
 
+def all_notebooks():
+    found = {p.resolve() for p in ROOT.glob("*.ipynb")}
+    found.update(p.resolve() for p in notebooks_from_quarto())
+    return sorted(found)
+
+
 def main():
     OUT_DIR.mkdir(exist_ok=True)
     base_url = raw_base_url()
-    for path in notebooks_from_quarto():
+    for path in all_notebooks():
         nb = json.loads(path.read_text(encoding="utf-8"))
         stripped = strip_notebook(nb, base_url, path.parent)
         out = OUT_DIR / path.name
