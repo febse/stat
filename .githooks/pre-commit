@@ -1,0 +1,5 @@
+#!/bin/sh
+# Regenerate the stripped class notebooks and stage them with the commit.
+cd "$(git rev-parse --show-toplevel)" || exit 1
+uv run python scripts/make_class_notebooks.py || exit 1
+git add class
