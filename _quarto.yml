@@ -9,6 +9,7 @@ book:
 
   chapters:
     - index.qmd
+    - 01-Probability.ipynb
     - references.qmd
 
 bibliography: references.bib
