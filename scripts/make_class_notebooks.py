@@ -2,9 +2,11 @@
 the notebooks listed in _quarto.yml.
 
 Only code cells whose first line starts with ``#ex-class``, the headings
-(titles) and the ``:::{.ex-class}`` fenced divs of markdown cells are kept. The results are
-written to ./class under the original file names. Relative figure paths are
-replaced by raw URLs on the main branch of the repository in _variables.yml.
+(titles) and the contents of ``.ex-class`` fenced divs of markdown cells are
+kept. The ``.ex-class`` class and otherwise-empty div wrappers are removed.
+The results are written to ./class under the original file names. Relative
+figure paths are replaced by raw URLs on the main branch of the repository in
+_variables.yml.
 """
 import json
 import re
@@ -18,6 +20,9 @@ OUT_DIR = ROOT / "class"
 OPEN_DIV = re.compile(r"^\s*:{3,}\s*\{.*\}\s*$|^\s*:{3,}\s*\S+\s*$")
 CLOSE_DIV = re.compile(r"^\s*:{3,}\s*$")
 EX_CLASS_DIV = re.compile(r"^\s*:{3,}\s*\{[^}]*\.ex-class[^}]*\}\s*$")
+ATTR_DIV = re.compile(r"^(\s*:{3,}\s*)\{([^}]*)\}(\s*)$")
+EX_CLASS_TOKEN = re.compile(r"(?<!\S)\.ex-class(?=\s|$)")
+CLASS_TOKEN = re.compile(r"(?<!\S)\.([A-Za-z_][\w-]*)")
 
 
 IMAGE = re.compile(r"(!\[[^\]]*\]\()([^)\s]+)")
@@ -85,6 +90,42 @@ def extract_kept_parts(text):
     return parts
 
 
+def strip_ex_class_divs(text):
+    """Remove ex-class from retained divs, unwrapping divs with no other classes."""
+    lines, div_stack, in_code = [], [], False
+    for line in text.splitlines(keepends=True):
+        stripped = line.rstrip("\n")
+        if FENCE.match(stripped):
+            in_code = not in_code
+            lines.append(line)
+            continue
+        if in_code:
+            lines.append(line)
+            continue
+
+        match = ATTR_DIV.match(stripped)
+        if match:
+            prefix, attrs, suffix = match.groups()
+            if EX_CLASS_TOKEN.search(attrs):
+                other_classes = [name for name in CLASS_TOKEN.findall(attrs) if name != "ex-class"]
+                if not other_classes:
+                    div_stack.append(True)
+                    continue
+                attrs = EX_CLASS_TOKEN.sub("", attrs)
+                attrs = re.sub(r"\s{2,}", " ", attrs).strip()
+                line = f"{prefix}{{{attrs}}}{suffix}" + ("\n" if line.endswith("\n") else "")
+                div_stack.append(False)
+                lines.append(line)
+                continue
+        if OPEN_DIV.match(stripped):
+            div_stack.append(False)
+        elif CLOSE_DIV.match(stripped) and div_stack:
+            if div_stack.pop():
+                continue
+        lines.append(line)
+    return "".join(lines)
+
+
 def is_ex_class_code(cell):
     first = source_text(cell).lstrip().split("\n", 1)[0]
     return re.match(r"#\s*ex-class\b", first) is not None
@@ -100,7 +141,8 @@ def strip_notebook(nb, base_url, notebook_dir):
             blocks = extract_kept_parts(source_text(cell))
             if blocks:
                 cell = dict(cell)
-                text = absolutize_figures("\n".join(blocks).rstrip("\n"), base_url, notebook_dir)
+                text = "\n".join(strip_ex_class_divs(block) for block in blocks).rstrip("\n")
+                text = absolutize_figures(text, base_url, notebook_dir)
                 cell["source"] = to_source_lines(text)
                 cells.append(cell)
     return {**nb, "cells": cells}
