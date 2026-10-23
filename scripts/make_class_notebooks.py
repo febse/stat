@@ -1,7 +1,7 @@
 """Create stripped class versions of all notebooks in the root folder and of
 the notebooks listed in _quarto.yml.
 
-Only code cells whose first line starts with ``#ex-class``, the headings
+Only code cells containing an ``#ex-class`` comment, the headings
 (titles) and the contents of ``.ex-class`` fenced divs of markdown cells are
 kept. The ``.ex-class`` class and otherwise-empty div wrappers are removed.
 The results are written to ./class under the original file names. Relative
@@ -127,8 +127,7 @@ def strip_ex_class_divs(text):
 
 
 def is_ex_class_code(cell):
-    first = source_text(cell).lstrip().split("\n", 1)[0]
-    return re.match(r"#\s*ex-class\b", first) is not None
+    return re.search(r"(?m)^[ \t]*#[ \t]*ex-class(?![\w-])", source_text(cell)) is not None
 
 
 def strip_notebook(nb, base_url, notebook_dir):
