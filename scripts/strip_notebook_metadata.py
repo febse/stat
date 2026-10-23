@@ -3,7 +3,7 @@ import json
 import sys
 
 # Notebook-level metadata that varies between machines .
-NB_META_DROP = {"kernelspec", "widgets", "vscode", "colab"}
+NB_META_DROP = {"widgets", "vscode", "colab"}
 LANG_INFO_DROP = {"version", "file_extension", "mimetype", "pygments_lexer", "codemirror_mode", "nbconvert_exporter"}
 # Cell-level metadata written by Jupyter/VS Code during execution.
 CELL_META_DROP = {"execution", "collapsed", "scrolled", "ExecuteTime", "vscode", "papermill", "tags_runtime"}
