@@ -1,12 +1,11 @@
 """Create stripped class versions of all notebooks in the root folder and of
 the notebooks listed in _quarto.yml.
 
-Only code cells containing an ``#ex-class`` comment, the headings
-(titles) and the contents of ``.ex-class`` fenced divs of markdown cells are
-kept. The ``.ex-class`` class and otherwise-empty div wrappers are removed.
-The results are written to ./class under the original file names. Relative
-figure paths are replaced by raw URLs on the main branch of the repository in
-_variables.yml.
+Code cells are kept unless they contain an ``#ex-no-class`` comment. Selected
+markdown content is kept: headings, attribute-marked fenced divs, and solution
+divs. The ``.ex-class`` class is removed from retained divs. The results are
+written to ./class under the original file names. Relative figure paths are
+replaced by raw URLs on the main branch of the repository in _variables.yml.
 """
 import json
 import re
@@ -19,7 +18,6 @@ OUT_DIR = ROOT / "class"
 
 OPEN_DIV = re.compile(r"^\s*:{3,}\s*\{.*\}\s*$|^\s*:{3,}\s*\S+\s*$")
 CLOSE_DIV = re.compile(r"^\s*:{3,}\s*$")
-EX_CLASS_DIV = re.compile(r"^\s*:{3,}\s*\{[^}]*\.ex-class[^}]*\}\s*$")
 ATTR_DIV = re.compile(r"^(\s*:{3,}\s*)\{([^}]*)\}(\s*)$")
 EX_CLASS_TOKEN = re.compile(r"(?<!\S)\.ex-class(?=\s|$)")
 CLASS_TOKEN = re.compile(r"(?<!\S)\.([A-Za-z_][\w-]*)")
@@ -58,36 +56,69 @@ def to_source_lines(text):
 
 HEADING = re.compile(r"^#{1,6}\s+\S")
 FENCE = re.compile(r"^\s*(```|~~~)")
+SOLUTION_HEADING = re.compile(r"^##[ \t]+Solution(?:[ \t]+.*)?[ \t]*$")
 
 
 def extract_kept_parts(text):
-    """Return headings and ex-class fenced divs (with fences) in document order."""
-    parts, current, depth, in_code, other = [], None, 0, False, 0
-    for line in text.splitlines(keepends=True):
-        stripped = line.rstrip("\n")
-        if current is None:
+    """Keep top-level headings, attribute divs, and divs headed as solutions."""
+    lines = text.splitlines(keepends=True)
+
+    def find_div_end(start):
+        depth, in_code = 1, False
+        for index in range(start + 1, len(lines)):
+            stripped = lines[index].rstrip("\n")
             if FENCE.match(stripped):
                 in_code = not in_code
-            elif in_code:
+            elif not in_code:
+                if CLOSE_DIV.match(stripped):
+                    depth -= 1
+                    if depth == 0:
+                        return index
+                elif OPEN_DIV.match(stripped):
+                    depth += 1
+        return None
+
+    def has_solution_heading(block):
+        in_code = False
+        for line in block:
+            stripped = line.rstrip("\n")
+            if FENCE.match(stripped):
+                in_code = not in_code
+            elif not in_code and SOLUTION_HEADING.match(stripped):
+                return True
+        return False
+
+    def collect(start, nested=False):
+        parts, index, in_code = [], start, False
+        while index < len(lines):
+            stripped = lines[index].rstrip("\n")
+            if FENCE.match(stripped):
+                in_code = not in_code
+                index += 1
                 continue
-            elif EX_CLASS_DIV.match(stripped):
-                current, depth = [line], 1
-            elif CLOSE_DIV.match(stripped):
-                other = max(other - 1, 0)
-            elif OPEN_DIV.match(stripped):
-                other += 1
-            elif HEADING.match(stripped) and other == 0:
-                parts.append(stripped + "\n")
-            continue
-        current.append(line)
-        if CLOSE_DIV.match(stripped):
-            depth -= 1
-            if depth == 0:
-                parts.append("".join(current).rstrip("\n") + "\n")
-                current = None
-        elif OPEN_DIV.match(stripped):
-            depth += 1
-    return parts
+            if in_code:
+                index += 1
+                continue
+            if nested and CLOSE_DIV.match(stripped):
+                return parts, index + 1
+            if OPEN_DIV.match(stripped):
+                end = find_div_end(index)
+                if end is None:
+                    return parts, len(lines)
+                block = lines[index:end + 1]
+                if ATTR_DIV.match(stripped) or has_solution_heading(block):
+                    parts.append("".join(block))
+                else:
+                    inner_parts, _ = collect(index + 1, nested=True)
+                    parts.extend(inner_parts)
+                index = end + 1
+                continue
+            if not nested and HEADING.match(stripped):
+                parts.append(lines[index])
+            index += 1
+        return parts, index
+
+    return collect(0)[0]
 
 
 def strip_ex_class_divs(text):
@@ -126,15 +157,15 @@ def strip_ex_class_divs(text):
     return "".join(lines)
 
 
-def is_ex_class_code(cell):
-    return re.search(r"(?m)^[ \t]*#[ \t]*ex-class(?![\w-])", source_text(cell)) is not None
+def is_ex_no_class_code(cell):
+    return re.search(r"(?m)^[ \t]*#[ \t]*ex-no-class(?![\w-])", source_text(cell)) is not None
 
 
 def strip_notebook(nb, base_url, notebook_dir):
     cells = []
     for cell in nb["cells"]:
         if cell["cell_type"] == "code":
-            if is_ex_class_code(cell):
+            if not is_ex_no_class_code(cell):
                 cells.append(cell)
         elif cell["cell_type"] == "markdown":
             blocks = extract_kept_parts(source_text(cell))
