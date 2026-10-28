@@ -9,6 +9,9 @@ book:
 
   chapters:
     - index.qmd
+    - 01-Probability.ipynb
+    - 02-Counting-Things.ipynb
+    # - 03-Conditional-Probability.ipynb
     - references.qmd
 
 bibliography: references.bib
