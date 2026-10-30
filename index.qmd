@@ -10,7 +10,7 @@
 
 ## Notebooks
 
-[Animation Playground](https://colab.research.google.com/github/febse/stat/blob/main/Animation-Playground.ipynb)
+[Animation Playground](https://colab.research.google.com/github/febse/stat/blob/main/Manim-Playground.ipynb)
 
 Course notebooks will be linked here as they are added. Each notebook can be opened directly in Google Colab, e.g.:
 
