@@ -20,6 +20,8 @@ format:
   html:
     theme: cosmo
     html-math-method: katex
+    code-fold: true
+    code-summary: "Show code"
 
 editor: visual
 
