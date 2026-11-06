@@ -11,7 +11,8 @@ book:
     - index.qmd
     - 01-Probability.ipynb
     - 02-Counting-Things.ipynb
-    # - 03-Conditional-Probability.ipynb
+    - 03-Conditional-Probability.ipynb
+    # - 03-A-Conditional-Probability-Fallacies.ipynb
     - references.qmd
 
 bibliography: references.bib
