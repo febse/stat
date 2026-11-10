@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.13"
 resolution-markers = [
     "python_full_version >= '3.14'",
@@ -1793,6 +1793,7 @@ name = "stat"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "ipykernel" },
     { name = "jupyter" },
     { name = "matplotlib-venn" },
     { name = "numpy" },
@@ -1805,6 +1806,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "ipykernel", specifier = ">=7.1.0" },
     { name = "jupyter", specifier = ">=1.1.1" },
     { name = "matplotlib-venn", specifier = ">=1.1.2" },
     { name = "numpy", specifier = ">=2.4.0" },
