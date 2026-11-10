@@ -13,6 +13,7 @@ book:
     - 02-Counting-Things.ipynb
     - 03-Conditional-Probability.ipynb
     - 03-A-Conditional-Probability-Fallacies.ipynb
+    - 04-B-Convolution.ipynb
     - 99-Videos.ipynb
     - references.qmd
 
