@@ -3,6 +3,10 @@
 # then regenerate the stripped class notebooks and stage them with the commit.
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
+# Collect all videos into the videos notebook and stage it with _quarto.yml.
+uv run python scripts/make_videos_notebook.py || exit 1
+git add 99-Videos.ipynb _quarto.yml
+
 git diff --cached --name-only --diff-filter=ACM -z -- '*.ipynb' |
   xargs -0 -r uv run python scripts/strip_notebook_metadata.py || exit 1
 git diff --cached --name-only --diff-filter=ACM -z -- '*.ipynb' | xargs -0 -r git add

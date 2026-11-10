@@ -17,6 +17,7 @@ Course notebooks will be linked here as they are added. Each notebook can be ope
 - [01-Probability](https://colab.research.google.com/github/febse/stat/blob/main/class/01-Probability.ipynb)
 - [02-Counting-Things](https://colab.research.google.com/github/febse/stat/blob/main/class/02-Counting-Things.ipynb)
 - [03-Conditional-Probability](https://colab.research.google.com/github/febse/stat/blob/main/class/03-Conditional-Probability.ipynb)
+- [03-A-Conditional-Probability-Fallacies](https://colab.research.google.com/github/febse/stat/blob/main/class/03-A-Conditional-Probability-Fallacies.ipynb)
 - [04-Discrete-Distributions](https://colab.research.google.com/github/febse/stat/blob/main/04-Discrete-Random-Variables.ipynb)
 - [05-Bi-variate-Discrete-Distributions](https://colab.research.google.com/github/febse/stat/blob/main/05-Bi-variate-Discrete-Distributions.ipynb)
 
