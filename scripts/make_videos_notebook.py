@@ -16,6 +16,16 @@ OUTPUT = "99-Videos.ipynb"
 
 VIDEO = re.compile(r"\{\{<\s*video\s+(\S+?)(?:\s[^>]*)?>\}\}")
 HEADING = re.compile(r"^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$")
+EXPLICIT_ID = re.compile(r"\s*\{[^}]*?#([\w:.-]+)[^}]*\}\s*$")
+
+
+def slugify(text):
+    """Approximate pandoc's auto-identifier for a heading."""
+    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
+    text = re.sub(r"[^\w\s.-]", "", text.lower()).strip()
+    text = re.sub(r"\s+", "-", text)
+    text = re.sub(r"^[^a-z]+", "", text)
+    return text or "section"
 
 
 def chapter_notebooks():
@@ -25,21 +35,36 @@ def chapter_notebooks():
 
 
 def find_videos(path):
-    """Return (heading, video path) pairs in document order."""
+    """Return (heading, anchor, video path) triples in document order."""
     nb = json.loads((ROOT / path).read_text(encoding="utf-8"))
     found = []
-    heading = None
+    heading = anchor = None
+    seen = {}
     for cell in nb.get("cells", []):
         if cell.get("cell_type") != "markdown":
             continue
         source = cell["source"]
         text = source if isinstance(source, str) else "".join(source)
+        previous = ""
         for line in text.splitlines():
             match = HEADING.match(line)
-            if match:
+            # A heading right after a ":::{...}" line is a callout title, not a section.
+            if match and not previous.startswith(":::"):
                 heading = match.group(2)
+                explicit = EXPLICIT_ID.search(heading)
+                if explicit:
+                    anchor = explicit.group(1)
+                    heading = heading[: explicit.start()]
+                else:
+                    anchor = slugify(heading)
+                    count = seen.get(anchor, 0)
+                    seen[anchor] = count + 1
+                    if count:
+                        anchor = f"{anchor}-{count}"
             for video in VIDEO.findall(line):
-                found.append((heading, video))
+                found.append((heading, anchor, video))
+            if line.strip():
+                previous = line.strip()
     return found
 
 
@@ -55,9 +80,12 @@ def build_notebook(videos_by_notebook):
         if not videos:
             continue
         cells.append(markdown_cell(f"## {Path(path).stem}"))
-        for heading, video in videos:
+        for heading, anchor, video in videos:
             title = f"### {heading}\n\n" if heading else ""
-            cells.append(markdown_cell(f"{title}{{{{< video {video} >}}}}"))
+            target = f"{path}#{anchor}" if anchor else path
+            label = f"{Path(path).stem}, section \"{heading}\"" if heading else Path(path).stem
+            link = f"\n\n[Go to this video in the chapter: {label}]({target})"
+            cells.append(markdown_cell(f"{title}{{{{< video {video} >}}}}{link}"))
     return {
         "cells": cells,
         "metadata": {

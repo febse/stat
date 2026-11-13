@@ -8,6 +8,11 @@
 ![](./figures/qr_code.png)
 :::
 
+## Interactive Demos
+
+- [Discrete Distributions](https://www.desmos.com/calculator/lycu7bigmc)
+- [Binomial Distribution](https://www.desmos.com/calculator/2pqw3sbemn)
+
 ## Notebooks
 
 [Animation Playground](https://colab.research.google.com/github/febse/stat/blob/main/Manim-Playground.ipynb)

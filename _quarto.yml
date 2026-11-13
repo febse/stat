@@ -13,6 +13,7 @@ book:
     - 02-Counting-Things.ipynb
     - 03-Conditional-Probability.ipynb
     - 03-A-Conditional-Probability-Fallacies.ipynb
+    - 04-Discrete-Random-Variables.ipynb
     - 04-A-Convolution.ipynb
     - 12-Estimation.ipynb
     - 99-Videos.ipynb
