@@ -15,6 +15,7 @@ book:
     - 03-A-Conditional-Probability-Fallacies.ipynb
     - 04-Discrete-Random-Variables.ipynb
     - 04-A-Convolution.ipynb
+    - 04-B-Law-Of-Large-Numbers.ipynb
     - 12-Estimation.ipynb
     - 99-Videos.ipynb
     - references.qmd
