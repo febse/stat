@@ -13,10 +13,11 @@ book:
     - 02-Counting-Things.ipynb
     - 03-Conditional-Probability.ipynb
     - 03-A-Conditional-Probability-Fallacies.ipynb
-    - 04-Discrete-Random-Variables.ipynb
-    - 04-A-Convolution.ipynb
-    - 04-B-Law-Of-Large-Numbers.ipynb
-    - 12-Estimation.ipynb
+    - 04-A-Discrete-Distributions.ipynb
+    - 04-B-Important-Discrete-Distributions.ipynb
+    - 04-C-Convolution.ipynb
+    - 04-D-Law-Of-Large-Numbers.ipynb
+    - 07-Estimation.ipynb
     - 99-Videos.ipynb
     - references.qmd
 
